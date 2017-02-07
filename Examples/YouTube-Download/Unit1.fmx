@@ -1,0 +1,237 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'YouTube Download Library'
+  ClientHeight = 411
+  ClientWidth = 634
+  Position = ScreenCenter
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object StatusBar1: TStatusBar
+    Position.Y = 389.000000000000000000
+    ShowSizeGrip = True
+    Size.Width = 634.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+  end
+  object TabControl1: TTabControl
+    Align = Client
+    Size.Width = 634.000000000000000000
+    Size.Height = 389.000000000000000000
+    Size.PlatformDefault = False
+    TabIndex = 0
+    TabOrder = 4
+    TabPosition = PlatformDefault
+    Sizes = (
+      634s
+      363s
+      634s
+      363s)
+    object TabItem3: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = True
+      Size.Width = 66.000000000000000000
+      Size.Height = 26.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'YouTube'
+      ExplicitSize.cx = 66.000000000000000000
+      ExplicitSize.cy = 26.000000000000000000
+      object Memo1: TMemo
+        Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+        DataDetectorTypes = []
+        Align = Client
+        Size.Width = 634.000000000000000000
+        Size.Height = 250.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Viewport.Width = 630.000000000000000000
+        Viewport.Height = 246.000000000000000000
+      end
+      object Layout2: TLayout
+        Align = Top
+        Size.Width = 634.000000000000000000
+        Size.Height = 113.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 8
+        object Button9: TButton
+          Position.X = 8.000000000000000000
+          Position.Y = 83.000000000000000000
+          TabOrder = 8
+          Text = 'Get'
+          OnClick = Button9Click
+        end
+        object Button1: TButton
+          Position.X = 96.000000000000000000
+          Position.Y = 83.000000000000000000
+          TabOrder = 3
+          Text = 'Download'
+          OnClick = Button1Click
+        end
+        object Button4: TButton
+          Position.X = 8.000000000000000000
+          Position.Y = 8.000000000000000000
+          TabOrder = 6
+          Text = 'age_gate'
+          OnClick = Button4Click
+        end
+        object Button5: TButton
+          Position.X = 96.000000000000000000
+          Position.Y = 8.000000000000000000
+          TabOrder = 7
+          Text = 'vevo'
+          OnClick = Button5Click
+        end
+        object Button6: TButton
+          Position.X = 184.000000000000000000
+          Position.Y = 8.000000000000000000
+          TabOrder = 9
+          Text = '4K'
+          OnClick = Button6Click
+        end
+        object Button7: TButton
+          Position.X = 272.000000000000000000
+          Position.Y = 8.000000000000000000
+          TabOrder = 10
+          Text = 'No video'
+          OnClick = Button7Click
+        end
+        object Button8: TButton
+          Position.X = 360.000000000000000000
+          Position.Y = 8.000000000000000000
+          TabOrder = 11
+          Text = 'Embed'
+          OnClick = Button8Click
+        end
+        object Edit1: TEdit
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          TabOrder = 2
+          Text = 
+            'https://www.youtube.com/watch?v=_dK2tDK9grQ&list=PLvFYFNbi-IBFeP' +
+            '5ALr50hoOmKiYRMvzUq'
+          Position.X = 8.000000000000000000
+          Position.Y = 40.000000000000000000
+          Size.Width = 609.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+        end
+        object Layout3: TLayout
+          Position.X = 184.000000000000000000
+          Position.Y = 83.000000000000000000
+          Size.Width = 433.000000000000000000
+          Size.Height = 22.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 12
+          object ProgressBar1: TProgressBar
+            Align = Client
+            Orientation = Horizontal
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Margins.Bottom = 5.000000000000000000
+            Size.Width = 423.000000000000000000
+            Size.Height = 12.000000000000000000
+            Size.PlatformDefault = False
+          end
+          object Label1: TLabel
+            Align = Contents
+            Margins.Left = 5.000000000000000000
+            Margins.Top = 5.000000000000000000
+            Margins.Right = 5.000000000000000000
+            Margins.Bottom = 5.000000000000000000
+            Size.Width = 423.000000000000000000
+            Size.Height = 12.000000000000000000
+            Size.PlatformDefault = False
+            TextSettings.HorzAlign = Center
+          end
+        end
+      end
+    end
+    object TabItem2: TTabItem
+      CustomIcon = <
+        item
+        end>
+      IsSelected = False
+      Size.Width = 87.000000000000000000
+      Size.Height = 26.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = ''
+      TabOrder = 0
+      Text = 'Validate URL'
+      ExplicitSize.cx = 87.000000000000000000
+      ExplicitSize.cy = 26.000000000000000000
+      object Memo2: TMemo
+        Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+        DataDetectorTypes = []
+        Lines.Strings = (
+          'https://www.youtube.com/watch?v=DFYRQ_zQ-gk&feature=featured'
+          'https://www.youtube.com/watch?v=DFYRQ_zQ-gk'
+          'http://www.youtube.com/watch?v=DFYRQ_zQ-gk'
+          '//www.youtube.com/watch?v=DFYRQ_zQ-gk'
+          'www.youtube.com/watch?v=DFYRQ_zQ-gk'
+          'https://youtube.com/watch?v=DFYRQ_zQ-gk'
+          'http://youtube.com/watch?v=DFYRQ_zQ-gk'
+          '//youtube.com/watch?v=DFYRQ_zQ-gk'
+          'youtube.com/watch?v=DFYRQ_zQ-gk'
+          'https://m.youtube.com/watch?v=DFYRQ_zQ-gk'
+          'http://m.youtube.com/watch?v=DFYRQ_zQ-gk'
+          '//m.youtube.com/watch?v=DFYRQ_zQ-gk'
+          'm.youtube.com/watch?v=DFYRQ_zQ-gk'
+          'https://www.youtube.com/v/DFYRQ_zQ-gk?fs=1&hl=en_US'
+          'http://www.youtube.com/v/DFYRQ_zQ-gk?fs=1&hl=en_US'
+          '//www.youtube.com/v/DFYRQ_zQ-gk?fs=1&hl=en_US'
+          'www.youtube.com/v/DFYRQ_zQ-gk?fs=1&hl=en_US'
+          'youtube.com/v/DFYRQ_zQ-gk?fs=1&hl=en_US'
+          'https://www.youtube.com/embed/DFYRQ_zQ-gk?autoplay=1'
+          'https://www.youtube.com/embed/DFYRQ_zQ-gk'
+          'http://www.youtube.com/embed/DFYRQ_zQ-gk'
+          '//www.youtube.com/embed/DFYRQ_zQ-gk'
+          'www.youtube.com/embed/DFYRQ_zQ-gk'
+          'https://youtube.com/embed/DFYRQ_zQ-gk'
+          'http://youtube.com/embed/DFYRQ_zQ-gk'
+          '//youtube.com/embed/DFYRQ_zQ-gk'
+          'youtube.com/embed/DFYRQ_zQ-gk'
+          'https://youtu.be/DFYRQ_zQ-gk?t=120'
+          'https://youtu.be/DFYRQ_zQ-gk'
+          'http://youtu.be/DFYRQ_zQ-gk'
+          '//youtu.be/DFYRQ_zQ-gk'
+          'youtu.be/DFYRQ_zQ-gk'
+          'https://www.youtube.com/HamdiKickProduction?v=DFYRQ_zQ-gk')
+        Align = Client
+        Size.Width = 634.000000000000000000
+        Size.Height = 322.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 7
+        Viewport.Width = 614.000000000000000000
+        Viewport.Height = 318.000000000000000000
+      end
+      object Layout1: TLayout
+        Align = Top
+        Size.Width = 634.000000000000000000
+        Size.Height = 41.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 8
+        object Button3: TButton
+          Position.X = 9.000000000000000000
+          Position.Y = 12.000000000000000000
+          TabOrder = 7
+          Text = 'ValidateURL'
+          OnClick = Button3Click
+        end
+      end
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 184
+    Top = 208
+    object MenuItem1: TMenuItem
+      Text = 'File'
+    end
+  end
+end
