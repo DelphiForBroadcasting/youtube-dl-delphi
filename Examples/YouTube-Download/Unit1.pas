@@ -71,7 +71,6 @@ begin
     for I := 0 to FYouTubeClient.Streams.Count - 1 do
     begin
       Memo1.Lines.Add(Format('Stream[%d]:', [i]));
-      Memo1.Lines.Add(Format('   Direct URL: %s', [FYouTubeClient.Streams.Items[i].URL.ToString]));
       Memo1.Lines.Add(Format('   ITag: %d', [FYouTubeClient.Streams.Items[i].ITag.Value]));
       Memo1.Lines.Add(Format('   MediaType: %s', [FYouTubeClient.Streams.Items[i].MediaType]));
       Memo1.Lines.Add(Format('   SIG: %s', [FYouTubeClient.Streams.Items[i].SIG]));
@@ -84,15 +83,6 @@ begin
       if FYouTubeClient.Streams.Items[i] is TYouTubeAdaptiveStream then
       begin
         Memo1.Lines.Add(Format('   QualityLabel: %s', [TYouTubeAdaptiveStream(FYouTubeClient.Streams.Items[i]).QualityLabel]));
-      end;
-    end;
-
-
-    if FYouTubeClient.Streams.Items[0] is TYouTubeMainStream then
-    begin
-      if not TYouTubeMainStream(FYouTubeClient.Streams.Items[0]).S.IsEmpty then
-      begin
-        FYouTubeClient.Streams.Items[0].URL.AddParameter('signature', FYouTubeClient.Streams.Items[0].Sig);
       end;
     end;
 

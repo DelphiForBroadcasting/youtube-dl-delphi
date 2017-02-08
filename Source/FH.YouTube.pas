@@ -71,10 +71,11 @@ type
     FSIG                : string;
     FS                  : string;
     procedure StreamPropertyParse(AStreamProperty: string);
+    function GetURL: TURI;
   public
     constructor Create(const AOwner: TYouTubeClient; const AStreamProperty: string); overload;
     destructor Destroy; override;
-    property URL : TURI read FURL;
+    property URL : TURI read GetURL;
     property ITag : TYouTubeITag read FITag;
     property MediaType : string read FType;
     property SIG : string read FSIG;
@@ -322,15 +323,55 @@ begin
   inherited Destroy;
 end;
 
+function TYouTubeStream.GetURL: TURI;
+var
+  i             : integer;
+  LJSONValue    : TJSONvalue;
+  LPlayerPage   : string;
+  LSignature    : string;
+  LParamIndex   : integer;
+begin
+  try
+    // Try Decipher
+    if not Self.FS.IsEmpty then
+    begin
+      if Self.FOwner.VideInfo.TryGetValue<TJSONValue>('player_url', LJSONValue) then
+      begin
+        if not LJSONValue.Value.IsEmpty then
+        begin
+          LPlayerPage := Self.FOwner.DownloadWebPage(LJSONValue.Value);
+          if not LPlayerPage.IsEmpty then
+          begin
+            Self.FSIG := TYouTubeSig.Decipher(LPlayerPage, Self.FS);
+          end;
+        end;
+      end;
+
+      // remove old signature from url if present
+      for I := 0 to Length(Self.FURL.Params) - 1 do
+      begin
+        if SameText(Self.FURL.Params[i].Name, 'signature') then
+        begin
+          LSignature := Self.FURL.Parameter[i].Value;
+          Self.FURL.DeleteParameter(i);
+          break;
+        end;
+      end;
+
+      // add  decipher signature to url
+      Self.FURL.AddParameter('signature', Self.FSig);
+
+    end;
+  finally
+    result := Self.FURL
+  end;
+end;
+
 procedure TYouTubeStream.StreamPropertyParse(AStreamProperty: string);
 var
   LStreamMapArr : TArray<string>;
   i             : integer;
   LDebugStr     : string;
-
-  // var Decipher
-  LJSONValue    : TJSONvalue;
-  LPlayerPage   : string;
 begin
   FStreamProperty := AStreamProperty;
   LStreamMapArr := FStreamProperty.Split(['&']);
@@ -347,10 +388,6 @@ begin
       except
         FURL.AddParameter('ratebypass', 'yes');
       end;
-
-      // entry["url"].first << "&signature=#{entry["sig"].first}"
-      // '&signature=' . (isset($sig) ? $sig : decrypt($s));
-
     end else
     if SameText(LStreamMapArr[i].Split(['='])[0], 'sig') then
     begin
@@ -359,18 +396,6 @@ begin
     if SameText(LStreamMapArr[i].Split(['='])[0], 's') then
     begin
       FS := LStreamMapArr[i].Split(['='])[1];
-      // Try Decipher
-      if Self.FOwner.VideInfo.TryGetValue<TJSONValue>('player_url', LJSONValue) then
-      begin
-        if not LJSONValue.Value.IsEmpty then
-        begin
-          LPlayerPage := Self.FOwner.DownloadWebPage(LJSONValue.Value);
-          if not LPlayerPage.IsEmpty then
-          begin
-            FSIG := TYouTubeSig.Decipher(LPlayerPage, FS);
-          end;
-        end;
-      end;
     end else
     if SameText(LStreamMapArr[i].Split(['='])[0], 'type') then
     begin
