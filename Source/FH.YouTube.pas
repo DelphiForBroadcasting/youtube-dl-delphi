@@ -966,7 +966,8 @@ begin
       LValueStr := TYouTubeClient.GetDatePublishedHTML(LWebPage);
       LJSONObject.AddPair(TJSONPair.Create('upload_date', TJSONString.Create(LValueStr)));
       // description
-      LValueStr := TYouTubeClient.GetDesriptionHTML(LWebPage);
+      //LValueStr := TYouTubeClient.GetDesriptionHTML(LWebPage);
+      LValueStr := '';
       LJSONObject.AddPair(TJSONPair.Create('description', TJSONString.Create(LValueStr)));
       // license
       LJSONObject.AddPair(TJSONPair.Create('license', TJSONString.Create('')));
