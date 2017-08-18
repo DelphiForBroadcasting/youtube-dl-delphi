@@ -172,6 +172,7 @@ type
     class procedure JSObjectDestroy(cx: PJSContext; Obj: PJSObject); cdecl; static;
 
     // Events
+    procedure JSGetStrProc(const s: string);
     procedure JSNotifyEvent(Sender: TObject);
     procedure JSKeyEvent(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure JSKeyPressEvent(Sender: TObject; var Key: Char);
@@ -2659,6 +2660,25 @@ begin
 
 end;
 
+procedure TJSClass.JSGetStrProc(const s: string);
+var
+  eventData: TJSEventData;
+  f_rval: jsval;
+  f_argv: jsval;
+begin
+  eventData := TJSEventData(self);
+  f_argv := StringToJSVal(eventData.fcx, s);
+
+  if JS_CallFunctionValue(eventData.fcx, eventData.fjsfuncobj, JSObjectToJSVal(eventData.fjsfuncobj), 1, @f_argv,
+    @f_rval) = js_true then
+  begin
+    //f_rval := 0;
+  end;
+
+
+end;
+
+
 class function TJSClass.JSPrintf(JSEngine: TJSEngine; const fmt: String; argc: Integer; args: pjsval): String;
 var
   jsArgs: pjsval_ptr;
@@ -3058,7 +3078,7 @@ begin
   prop := t.getProperty(propName);
   if prop <> nil then
   begin
-    if prop.PropertyType.Handle.Kind = tkMethod then
+    if ((prop.PropertyType.Handle.Kind = tkMethod) or (prop.PropertyType.Handle.Kind = tkInterface)) then
     begin
       SetMethodProp(Obj.FNativeObj, propName, NilMethod);
 
@@ -3110,6 +3130,14 @@ begin
           begin
             eventData := TJSEventData.Create(jsfuncobj, propName, methodName, Obj, cx);
             Method.Code := @TJSClass.JSMouseMoveEvent;
+            Method.data := eventData; // Tricky  set method's self variable to eventdata
+            SetMethodProp(Obj.FNativeObj, propName, Method);
+            Obj.FEventsCode.AddOrSetValue(PropName, eventData);
+          end
+          else if prop.PropertyType.Handle = TypeInfo(TGetStrProc) then
+          begin
+            eventData := TJSEventData.Create(jsfuncobj, propName, methodName, Obj, cx);
+            Method.Code := @TJSClass.JSGetStrProc;
             Method.data := eventData; // Tricky  set method's self variable to eventdata
             SetMethodProp(Obj.FNativeObj, propName, Method);
             Obj.FEventsCode.AddOrSetValue(PropName, eventData);
