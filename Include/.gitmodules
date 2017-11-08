@@ -1,0 +1,3 @@
+[submodule "ChakraCore-Delphi"]
+	path = ChakraCore-Delphi
+	url = https://github.com/DelphiForBroadcasting/ChakraCore-Delphi
