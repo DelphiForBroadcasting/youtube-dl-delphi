@@ -6,6 +6,7 @@ uses
   System.Classes,
   System.Json,
   System.SysUtils,
+  System.IOUtils,
   System.Generics.Collections,
   System.DateUtils,
   System.SyncObjs,
@@ -368,6 +369,19 @@ begin
 end;
 
 procedure TYouTubeStream.StreamPropertyParse(AStreamProperty: string);
+
+function ExistsParameter(const Params: TURIParameters; const AName: string): boolean;
+var
+  I: Integer;
+  LName: string;
+begin
+  Result := false;
+  LName := TNetEncoding.URL.EncodeQuery(AName);
+  for I := 0 to Length(Params) - 1 do
+    if Params[I].Name = LName then
+      Exit(true);
+end;
+
 var
   LStreamMapArr : TArray<string>;
   i             : integer;
@@ -382,12 +396,14 @@ begin
     begin
       FURL := TURI.Create(TNetEncoding.URL.Decode(LStreamMapArr[i].Split(['='])[1]));
 
-      try
-        if SameText(FURL.ParameterByName['ratebypass'], 'yes') then
-          FURL.ParameterByName['ratebypass'] := 'yes';
-      except
+      if ExistsParameter(FURL.Params, 'ratebypass') then
+      begin
+        FURL.ParameterByName['ratebypass'] := 'yes';
+      end else
+      begin
         FURL.AddParameter('ratebypass', 'yes');
       end;
+
     end else
     if SameText(LStreamMapArr[i].Split(['='])[0], 'sig') then
     begin
@@ -786,7 +802,8 @@ end;
 class function TYouTubeClient.GetJSPlayerUrlHTML(const AWebPage: string): string;
 const
   cASSETS_RE  = '"assets":.+?"js":\s*("(?P<assets_url>[^"]+)")';
-  cPLAYER_RE =  'ytplayer\.config.*?"url"\s*:\s*("(?P<ytplayer_url>[^"]+)")';
+  cPLAYER_RE =  'ytplayer\.config.*?"url"\s*:\s*("(?P<ytplayer_url>[^"]*)")';
+
   cPLAYER_URL_RE= '(?P<URL>(?:https|http):(?:\/|\\)+([a-zA-Z0-9\-\.\/\\]+)((?:player-([^/]+)(?:\/|\\)watch_as3)\.swf|(?:player-([^/]+)(?:\/|\\)base)\.js))';
 var
    LRegEx     : TRegEx;
@@ -850,6 +867,7 @@ var
   LJSONValue          : TJSONValue;
   LWebPage            : string;
   LValueStr           : string;
+  LUrlValueStr        : string;
   LAgeGate            : boolean;
 begin
   LVideoInfo := nil;
@@ -877,19 +895,21 @@ begin
       // maps LVideoInfo to result JSONObject
 
       // player_url
+      if LVideoInfo.TryGetValue<TJSONValue>('url', LJSONValue) then
+      begin
+        LUrlValueStr := LJSONValue.Value;
+      end;
+      if LUrlValueStr.IsEmpty then
+        LUrlValueStr:= 'https://www.youtube.com/';
       if LVideoInfo.TryGetValue<TJSONValue>('assets.js', LJSONValue) then
       begin
-        LValueStr := LJSONValue.Value;
-        if LVideoInfo.TryGetValue<TJSONValue>('url', LJSONValue) then
+        if not LJSONValue.Value.IsEmpty and not LUrlValueStr.IsEmpty then
         begin
-          if not LValueStr.IsEmpty and not LJSONValue.Value.IsEmpty then
-          begin
-            try
-              LValueStr := TURI.PathRelativeToAbs(LValueStr.Replace('\/', '/'), TURI.Create(LJSONValue.Value.Replace('\/', '/')));
-            except    end;
-            if not LValueStr.IsEmpty then
-              LJSONObject.AddPair(TJSONPair.Create('player_url', TJSONString.Create(LValueStr)));
-          end;
+          try
+            LValueStr := TURI.PathRelativeToAbs(LJSONValue.Value.Replace('\/', '/'), TURI.Create(LUrlValueStr.Replace('\/', '/')));
+          except    end;
+          if not LValueStr.IsEmpty then
+            LJSONObject.AddPair(TJSONPair.Create('player_url', TJSONString.Create(LValueStr)));
         end;
       end;
 
@@ -949,7 +969,7 @@ begin
       LJSONObject.AddPair(TJSONPair.Create('provider_url', TJSONString.Create('https://www.youtube.com')));
       // uri
       if not LJSONObject.TryGetValue<TJSONValue>('url', LJSONValue) then
-      LJSONObject.AddPair(TJSONPair.Create('url', TJSONString.Create(TYouTubeURL.Create(AURL).ToString)));
+        LJSONObject.AddPair(TJSONPair.Create('url', TJSONString.Create(TYouTubeURL.Create(AURL).ToString)));
       // title
       if not LJSONObject.TryGetValue<TJSONValue>('title', LJSONValue) then
       begin
