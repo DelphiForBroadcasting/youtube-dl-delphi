@@ -156,6 +156,8 @@ function TYouTubeSig.GetFunctionName(const AJScript: string): string;
 const
   cSIGNATURE_RE = '(["\''])signature\1\s*,\s*(?P<sig>[a-zA-Z0-9$]+)\(';
   cSIG_RE = '\.sig\|\|(?P<sig>[a-zA-Z0-9$]+)\(';
+  CSIG_RE1 = 'yt\.akamaized\.net/\)\s*\|\|\s*.*?\s*c\s*&&\s*d\.set\([^,]+\s*,\s*(?P<sig>[a-zA-Z0-9$]+)\(';
+  //CSIG_RE2 = '\bc\s*&&\s*d\.set\([^,]+\s*,\s*(?P<sig>[a-zA-Z0-9$]+)\(';
 var
   LRegEx        : TRegEx;
 begin
@@ -169,6 +171,14 @@ begin
   end;
 
   LRegEx := TRegEx.Create(cSIG_RE);
+  if LRegEx.IsMatch(AJScript) then
+  begin
+    result := LRegEx.Match(AJScript).Groups['sig'].Value;
+    if not result.IsEmpty then
+      exit;
+  end;
+
+  LRegEx := TRegEx.Create(cSIG_RE1);
   if LRegEx.IsMatch(AJScript) then
   begin
     result := LRegEx.Match(AJScript).Groups['sig'].Value;
