@@ -1,4 +1,4 @@
-
+﻿
 (*
 
 function js2php($f) {
@@ -78,6 +78,7 @@ end;
 
 function TYouTubeSig.Decipher(const ACipher: string): string;
 var
+  lCipher :string;
 {$IfDef SpiderMonkey}
   LJSEngine       : TJSEngine;
   LJSValSignature : jsval;
@@ -86,7 +87,7 @@ var
 {$EndIf}
 begin
   result := '';
-
+  lCipher := ACipher.Replace('%3D','=',[rfReplaceAll]); // Patch by 김승원 <kimsyo5140>
 (*
 var
   LJSExec : TJSExec;
@@ -104,7 +105,7 @@ begin
   LJSEngine := TJSEngine.Create;
   try
     LJSEngine.Evaluate(Self.ToString, ':ApplicationInitScript:');
-    LJSValSignature:= StringToJSVal(LJSEngine.Context, ACipher);
+    LJSValSignature:= StringToJSVal(LJSEngine.Context, lCipher);
     if JS_LookupProperty(LJSEngine.Context, LJSEngine.Global.JSObject, PAnsiChar(ansistring(Self.FunctionName)), @LVp) = js_true then
     begin
       if (not JSValIsVoid(LVp)) and (JSValIsObject(LVp)) then

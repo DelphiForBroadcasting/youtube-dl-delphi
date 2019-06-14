@@ -1,4 +1,4 @@
-unit FH.YouTube;
+﻿unit FH.YouTube;
 
 interface
 
@@ -361,6 +361,7 @@ begin
 
       // add  decipher signature to url
       Self.FURL.AddParameter('signature', Self.FSig);
+      // Self.FURL.AddParameter('sig', Self.FSig);  // Patch by 김승원 <kimsyo5140>  (need to check)
 
     end;
   finally

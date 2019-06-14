@@ -2428,7 +2428,6 @@ end;
 class function TJSClass.JSMethodCall(cx: PJSContext; argc: uintN; vp: pjsval): JSBool;
 {$POINTERMATH ON}
 var
-  
   Obj: TJSClass;
   ptr, p: Pointer;
   m: TRttiMethod;
@@ -2583,8 +2582,6 @@ begin
           JS_ReportError(cx, PAnsiChar(AnsiString(e.message)), nil);
         end
       end;
-
-
     end;
   end;
 
